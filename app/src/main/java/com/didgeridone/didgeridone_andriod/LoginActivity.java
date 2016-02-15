@@ -3,6 +3,7 @@ package com.didgeridone.didgeridone_andriod;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -310,7 +311,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
+                Thread.sleep(500);
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
             } catch (InterruptedException e) {
                 return false;
             }
