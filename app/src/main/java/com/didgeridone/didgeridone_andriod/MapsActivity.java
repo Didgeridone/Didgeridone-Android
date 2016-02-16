@@ -81,9 +81,14 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
         DraggableCircle circle = new DraggableCircle(DEFAULT_LAT_LNG, DEFAULT_RADIUS);
         mCircles.add(circle);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, 19.0f));
-        mMap.setMyLocationEnabled(true);
 
-        EditText editText = (EditText)findViewById(R.id.editText_Reminder_Name);
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException ex) {
+            throw ex;
+        }
+
+        EditText editText = (EditText) findViewById(R.id.editText_Reminder_Name);
         editText.setText(Default_Name, TextView.BufferType.EDITABLE);
     }
 
