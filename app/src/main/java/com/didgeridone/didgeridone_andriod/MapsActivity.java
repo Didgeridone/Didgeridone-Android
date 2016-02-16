@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -164,5 +165,18 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
     @Override
     public void onMapLongClick(LatLng point) {
         // Don't allow any more to be added here, but we want to keep this override.
+    }
+
+    public void buttonBack(View v) {
+        startActivity(new Intent(MapsActivity.this, MainActivity.class));
+    }
+
+    public void buttonSave(View v) {
+        //Location_Circle
+        EditText editText = (EditText) findViewById(R.id.editText_Reminder_Name);
+        String newTaskName = editText.getText().toString();
+        System.out.println("Test: " + Location_Circle.centerMarker.getPosition().latitude);
+        System.out.println("Test: " + Location_Circle.centerMarker.getPosition().longitude);
+        System.out.println("Test: " + Location_Circle.radius);
     }
 }

@@ -28,8 +28,40 @@
                 android:id="@+id/editText_Reminder_Name"
                 android:editable="false"
                 android:textIsSelectable="false"
-                android:inputType="none" />
+                android:inputType="text" />
         </TableRow>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Back"
+                        android:id="@+id/button_back"
+                        android:onClick="buttonBack" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Save"
+                        android:id="@+id/button_save"
+                        android:layout_column="5"
+                        android:onClick="buttonSave" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
 
     </TableLayout>
 
