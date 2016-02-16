@@ -21,16 +21,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // To call this activity do this...
 //Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-//        intent.putExtra("Reminder_Name", "Test Reminder Name");
-//        intent.putExtra("Reminder_Latitude", (double)39.75778308);
-//        intent.putExtra("Reminder_Longitude", (double)-105.00715055);
-//        intent.putExtra("Reminder_Radius", (double)12.0);
-//        startActivity(intent);
+//intent.putExtra("Reminder_Name", "Test Reminder Name");
+//intent.putExtra("Reminder_Latitude", (double)39.75778308);
+//intent.putExtra("Reminder_Longitude", (double)-105.00715055);
+//intent.putExtra("Reminder_Radius", (double)12.0);
+//startActivity(intent);
 
 public class MapsActivity extends FragmentActivity implements OnMarkerDragListener,
         OnMapLongClickListener, OnMapReadyCallback {
@@ -42,7 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
     private static final int DEFAULT_CIRCLE_WIDTH = 5;
     private static final int DEFAULT_STROKE_COLOR = Color.BLACK;
     private static final int DEFAULT_FILL_COLOR = Color.HSVToColor(127, new float[]{0, 1, 1});
-    private List<DraggableCircle> mCircles = new ArrayList<DraggableCircle>(1);
+    private DraggableCircle Location_Circle;
     private GoogleMap mMap;
 
     @Override
@@ -78,8 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
         mMap.setOnMapLongClickListener(this);
 
         // Add a marker and move the camera
-        DraggableCircle circle = new DraggableCircle(DEFAULT_LAT_LNG, DEFAULT_RADIUS);
-        mCircles.add(circle);
+        Location_Circle = new DraggableCircle(DEFAULT_LAT_LNG, DEFAULT_RADIUS);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LAT_LNG, 19.0f));
 
         try {
@@ -162,16 +158,11 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
     }
 
     private void onMarkerMoved(Marker marker) {
-        for (DraggableCircle draggableCircle : mCircles) {
-            if (draggableCircle.onMarkerMoved(marker)) {
-                break;
-            }
-        }
+        Location_Circle.onMarkerMoved(marker);
     }
 
     @Override
     public void onMapLongClick(LatLng point) {
-        DraggableCircle circle = new DraggableCircle(point, DEFAULT_RADIUS);
-        mCircles.add(circle);
+        // Don't allow any more to be added here, but we want to keep this override.
     }
 }
