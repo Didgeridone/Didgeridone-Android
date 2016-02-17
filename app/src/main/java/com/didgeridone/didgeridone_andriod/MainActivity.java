@@ -28,7 +28,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import android.widget.TextView;
-
+import android.widget.AdapterView;
 import android.content.Intent;
 import android.app.IntentService;
 
@@ -60,16 +60,28 @@ public class MainActivity extends AppCompatActivity {
 
         new DownloadTask().execute("https://didgeridone.herokuapp.com/task/56c3ad2db2273e8c7c9d3612");
 
-        ListView myList;
+        final ListView myList;
         myList = (ListView) findViewById(R.id.listView);
 
-//        myList.setClickable(true);
-//        myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-//
-//            }
-//        });
+        myList.setClickable(true);
+        myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String value = myList.getItemAtPosition(position).toString();
+
+
+
+                // To call this activity do this...
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
+                intent.putExtra("Reminder_Task_Id", "56c4ad756c11bc110089a24c");
+                intent.putExtra("Reminder_Name", "Test Reminder Name");
+                intent.putExtra("Reminder_Latitude", (double)39.75778308);
+                intent.putExtra("Reminder_Longitude", (double)-105.00715055);
+                intent.putExtra("Reminder_Radius", (double)12.0);
+                startActivity(intent);
+            }
+        });
 
 
 
@@ -139,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i=0;i<tasks.length();i++) {
                     // parse the JSON object into fields and values
                   JSONObject jsonTasks = tasks.getJSONObject(i);
-                   String task_id = jsonTasks.getString("task_id");
+                   //String task_id = jsonTasks.getString("task_id");
                    String name = jsonTasks.getString("name");
 //                    int y_lat = jsonTasks.getInt("lat");
 //                    int x_long = jsonTasks.getInt("long");
