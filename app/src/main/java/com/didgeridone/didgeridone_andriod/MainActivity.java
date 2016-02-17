@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
 
+    String userID = "56c3ad2db2273e8c7c9d3612";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent.putExtra("Reminder_User_Id", userID);
+                startActivity(intent);
             }
         });
 
-        new DownloadTask().execute("https://didgeridone.herokuapp.com/task/56c3ad2db2273e8c7c9d3612");
+        new DownloadTask().execute("https://didgeridone.herokuapp.com/task/" + userID);
 
         final ListView myList;
         myList = (ListView) findViewById(R.id.listView);
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // To call this activity do this...
                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                    intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
+                    intent.putExtra("Reminder_User_Id", userID);
                     intent.putExtra("Reminder_Task_Id", jsonObj.get("task_id").toString());
                     intent.putExtra("Reminder_Name", jsonObj.get("name").toString());
                     intent.putExtra("Reminder_Latitude", Double.parseDouble(jsonObj.get("lat").toString()));
