@@ -59,6 +59,13 @@
                         android:id="@+id/button_save"
                         android:layout_column="5"
                         android:onClick="buttonSave" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delete"
+                        android:id="@+id/button_delete"
+                        android:onClick="buttonDelete" />
                 </TableRow>
             </TableLayout>
         </LinearLayout>
