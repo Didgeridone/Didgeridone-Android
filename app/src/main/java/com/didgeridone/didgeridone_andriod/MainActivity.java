@@ -28,6 +28,9 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import android.widget.TextView;
 
+import android.content.Intent;
+import android.app.IntentService;
+
 
 
 
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new DownloadTask().execute("https://didgeridone.herokuapp.com/task/56c39410b2273e8c7c9d3603");
+        new DownloadTask().execute("https://didgeridone.herokuapp.com/task/56c3ad2db2273e8c7c9d3612");
 
         ListView myList;
         myList = (ListView) findViewById(R.id.listView);
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         myList.setAdapter(adapter);
     }
+
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
@@ -121,15 +125,17 @@ public class MainActivity extends AppCompatActivity {
                 for(int i=0;i<tasks.length();i++) {
                     // parse the JSON object into fields and values
                     JSONObject jsonTasks = tasks.getJSONObject(i);
-//                    int task_id = jsonTasks.getInt("task_id");
-//                    String name = jsonTasks.getString("name");
+                    //String task_id = jsonTasks.getString("task_id");
+                    String name = jsonTasks.getString("name");
 //                    int y_lat = jsonTasks.getInt("lat");
 //                    int x_long = jsonTasks.getInt("long");
 //                    int radius = jsonTasks.getInt("radius");
 //                    Boolean task_done = jsonTasks.getBoolean("done");
 //                    Boolean enter = jsonTasks.getBoolean("enter");
 
-                    allTasks.add(jsonTasks.getString("name"));
+
+                   allTasks.add(name);
+
 
 
                     // create a taskDTO object and populate with JSON data
@@ -169,4 +175,10 @@ public class MainActivity extends AppCompatActivity {
         return new String(buffer);
     }
 
+//    public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
+//        HaspMap<String, String> map = itemsList.get(position);
+//        Intent mViewCartIntent = new Intent(OldEventActivity.this, OldUploadActivity.class);
+//        mViewCartIntent.putExtra("KEY", map.get(KEY_TITLE));
+//        startActivity(mViewCartIntent);
+//    }
 }

@@ -22,13 +22,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+
 // To call this activity do this...
-//Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-//intent.putExtra("Reminder_Name", "Test Reminder Name");
-//intent.putExtra("Reminder_Latitude", (double)39.75778308);
-//intent.putExtra("Reminder_Longitude", (double)-105.00715055);
-//intent.putExtra("Reminder_Radius", (double)12.0);
-//startActivity(intent);
+//    Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+//    intent.putExtra("Reminder_Name", "Test Reminder Name");
+//    intent.putExtra("Reminder_Latitude", (double)39.75778308);
+//    intent.putExtra("Reminder_Longitude", (double)-105.00715055);
+//    intent.putExtra("Reminder_Radius", (double)12.0);
+//    startActivity(intent);
 
 public class MapsActivity extends FragmentActivity implements OnMarkerDragListener,
         OnMapLongClickListener, OnMapReadyCallback {
