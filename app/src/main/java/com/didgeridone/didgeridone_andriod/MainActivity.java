@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import android.widget.TextView;
 
 import android.content.Intent;
@@ -62,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
         ListView myList;
         myList = (ListView) findViewById(R.id.listView);
 
+//        myList.setClickable(true);
+//        myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//
+//            }
+//        });
+
+
+
         //String[]countryNamesArray = {"South Africa", "Namibia", "Zimbabwe", "Botswana", "Zambia", "Kenya", "Mali", "Sudan", "Nigeria"};
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, allTasks);
@@ -86,15 +97,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
 
         protected void onPostExecute(String result) {
-            //Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-
             adapter.notifyDataSetChanged();
+
         }
     }
+
+
 
     private String downloadContent(String myurl) throws IOException {
         InputStream is = null;
         int length = 50000;
+
+
 
         try {
             URL url = new URL(myurl);
@@ -116,41 +130,36 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject root = new JSONObject(contentAsString);
                 // get the array of tasks from JSON
                 JSONObject user = root.getJSONObject("user");
-                System.out.println(user);
+//                System.out.println(user);
                 JSONArray tasks = user.getJSONArray("tasks");
-                System.out.println(tasks);
+//                System.out.println(tasks);
 //                JSONArray tasks = new JSONArray(contentAsString);
 
-
+                HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
                 for(int i=0;i<tasks.length();i++) {
                     // parse the JSON object into fields and values
-                    JSONObject jsonTasks = tasks.getJSONObject(i);
-                    //String task_id = jsonTasks.getString("task_id");
-                    String name = jsonTasks.getString("name");
+                  JSONObject jsonTasks = tasks.getJSONObject(i);
+                   String task_id = jsonTasks.getString("task_id");
+                   String name = jsonTasks.getString("name");
 //                    int y_lat = jsonTasks.getInt("lat");
 //                    int x_long = jsonTasks.getInt("long");
 //                    int radius = jsonTasks.getInt("radius");
 //                    Boolean task_done = jsonTasks.getBoolean("done");
 //                    Boolean enter = jsonTasks.getBoolean("enter");
+                    allTasks.add(name);
+                    int position = allTasks.indexOf(name);
+
+                    mapper.put(position, jsonTasks);
+                    System.out.println(mapper);
+                    //System.out.println(name);
+                    //System.out.println(taskid);
+                    //allTaskIDS.add(task_id);
 
 
-                   allTasks.add(name);
+                    //System.out.println();
+                    //System.out.println("All good");
 
 
-
-                    // create a taskDTO object and populate with JSON data
-//                    TaskDTO task = new TaskDTO();
-//                    task.setTask_id(task_id);
-//                    task.setName(name);
-//                    task.setY_lat(y_lat);
-//                    task.setX_long(x_long);
-//                    task.setRadius(radius);
-//                    task.setTask_done(task_done);
-//                    task.setEnter(enter);
-//
-//                    // add new task to collection
-//                    allTasks.add(task);
-                    //System.out.println("What up");
 
                 }
 
@@ -175,10 +184,4 @@ public class MainActivity extends AppCompatActivity {
         return new String(buffer);
     }
 
-//    public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
-//        HaspMap<String, String> map = itemsList.get(position);
-//        Intent mViewCartIntent = new Intent(OldEventActivity.this, OldUploadActivity.class);
-//        mViewCartIntent.putExtra("KEY", map.get(KEY_TITLE));
-//        startActivity(mViewCartIntent);
-//    }
 }
