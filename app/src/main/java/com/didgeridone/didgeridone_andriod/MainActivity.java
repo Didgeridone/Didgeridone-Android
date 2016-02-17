@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> allTasks = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
 
+    HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,26 +68,34 @@ public class MainActivity extends AppCompatActivity {
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String value = myList.getItemAtPosition(position).toString();
+                System.out.println(Integer.toString(position));
+                String obj = mapper.get((position)).toString();
+
+                try {
+                    JSONObject jsonObj = new JSONObject(obj);
+                  System.out.println(jsonObj);
 
 
+                    // To call this activity do this...
+                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                    intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
+                    intent.putExtra("Reminder_Task_Id", jsonObj.get("task_id").toString());
+                    intent.putExtra("Reminder_Name", jsonObj.get("name").toString());
+                    intent.putExtra("Reminder_Latitude", jsonObj.get("lat").toString());
+                    intent.putExtra("Reminder_Longitude", jsonObj.get("long").toString());
+                    intent.putExtra("Reminder_Radius", jsonObj.get("radius").toString());
+                    startActivity(intent);
 
-                // To call this activity do this...
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
-                intent.putExtra("Reminder_Task_Id", "56c4ad756c11bc110089a24c");
-                intent.putExtra("Reminder_Name", "Test Reminder Name");
-                intent.putExtra("Reminder_Latitude", (double)39.75778308);
-                intent.putExtra("Reminder_Longitude", (double)-105.00715055);
-                intent.putExtra("Reminder_Radius", (double)12.0);
-                startActivity(intent);
+                } catch (Exception e) {
+                    Log.d("Didgeridoo","Exception",e);
+                }
+
             }
         });
 
 
 
         //String[]countryNamesArray = {"South Africa", "Namibia", "Zimbabwe", "Botswana", "Zambia", "Kenya", "Mali", "Sudan", "Nigeria"};
-
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, allTasks);
         adapter.clear();
         adapter.notifyDataSetChanged();
@@ -109,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
 
         protected void onPostExecute(String result) {
+            System.out.println("Onpostexecute: " + allTasks);
             adapter.notifyDataSetChanged();
 
         }
@@ -147,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 //                System.out.println(tasks);
 //                JSONArray tasks = new JSONArray(contentAsString);
 
-                HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
+
                 for(int i=0;i<tasks.length();i++) {
                     // parse the JSON object into fields and values
                   JSONObject jsonTasks = tasks.getJSONObject(i);
@@ -160,9 +170,8 @@ public class MainActivity extends AppCompatActivity {
 //                    Boolean enter = jsonTasks.getBoolean("enter");
                     allTasks.add(name);
                     int position = allTasks.indexOf(name);
-
                     mapper.put(position, jsonTasks);
-                    System.out.println(mapper);
+                    //System.out.println(mapper);
                     //System.out.println(name);
                     //System.out.println(taskid);
                     //allTaskIDS.add(task_id);
