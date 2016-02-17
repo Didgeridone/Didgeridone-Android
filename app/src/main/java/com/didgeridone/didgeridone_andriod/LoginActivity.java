@@ -314,7 +314,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 // Simulate network access.
                 Thread.sleep(500);
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+                intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
+                intent.putExtra("Reminder_Task_Id", "56c4ad756c11bc110089a24c");
+                intent.putExtra("Reminder_Name", "Test Reminder Name");
+                intent.putExtra("Reminder_Latitude", (double)39.75778308);
+                intent.putExtra("Reminder_Longitude", (double)-105.00715055);
+                intent.putExtra("Reminder_Radius", (double)12.0);
+                startActivity(intent);
             } catch (InterruptedException e) {
                 return false;
             }

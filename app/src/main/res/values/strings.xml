@@ -16,4 +16,10 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="Maps_Label_Reminder_Name">Name:</string>
     <string name="title_activity_maps">New Reminder</string>
+
+    <!-- Strings related to Geofencing -->
+    <string name="start_geofence_service">Starting geofence transition service</string>
+    <string name="entering_geofence">Entering the GeoFence zone</string>
+    <string name="exiting_geofence">Exiting the GeoFence zone</string>
+    <string name="google_app_id">AIzaSyB0yxv9OZbMRYP7DTh5ao-qafTwApfNBOo</string>
 </resources>

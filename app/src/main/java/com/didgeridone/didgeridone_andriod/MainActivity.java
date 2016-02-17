@@ -33,8 +33,6 @@ import android.content.Intent;
 import android.app.IntentService;
 
 
-
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
