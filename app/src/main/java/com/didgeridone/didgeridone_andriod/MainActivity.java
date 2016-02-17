@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(Integer.toString(position));
                 String obj = mapper.get((position)).toString();
 
                 try {
@@ -117,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
 
         protected void onPostExecute(String result) {
-            System.out.println("Onpostexecute: " + allTasks);
             adapter.notifyDataSetChanged();
 
         }
