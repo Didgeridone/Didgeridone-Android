@@ -1,18 +1,17 @@
 package com.didgeridone.didgeridone_andriod;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-
 import android.widget.ArrayAdapter;
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
+import android.widget.AdapterView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,16 +20,16 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import android.widget.TextView;
 
-import android.content.Intent;
-import android.app.IntentService;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
+
+
+
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> allTasks = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
 
+    HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +58,37 @@ public class MainActivity extends AppCompatActivity {
 
         new DownloadTask().execute("https://didgeridone.herokuapp.com/task/56c3ad2db2273e8c7c9d3612");
 
-        ListView myList;
+        final ListView myList;
         myList = (ListView) findViewById(R.id.listView);
 
-//        myList.setClickable(true);
-//        myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-//
-//            }
-//        });
+        myList.setClickable(true);
+        myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println(Integer.toString(position));
+                String obj = mapper.get((position)).toString();
+
+                try {
+                    JSONObject jsonObj = new JSONObject(obj);
+                  System.out.println(jsonObj);
 
 
+                    // To call this activity do this...
+                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                    intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
+                    intent.putExtra("Reminder_Task_Id", jsonObj.get("task_id").toString());
+                    intent.putExtra("Reminder_Name", jsonObj.get("name").toString());
+                    intent.putExtra("Reminder_Latitude", Double.parseDouble(jsonObj.get("lat").toString()));
+                    intent.putExtra("Reminder_Longitude", Double.parseDouble(jsonObj.get("long").toString()));
+                    intent.putExtra("Reminder_Radius", Double.parseDouble(jsonObj.get("radius").toString()));
+                    startActivity(intent);
 
-        //String[]countryNamesArray = {"South Africa", "Namibia", "Zimbabwe", "Botswana", "Zambia", "Kenya", "Mali", "Sudan", "Nigeria"};
+                } catch (Exception e) {
+                    Log.d("Didgeridoo","Exception",e);
+                }
+
+            }
+        });
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, allTasks);
         adapter.clear();
@@ -95,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
 
         protected void onPostExecute(String result) {
+            System.out.println("Onpostexecute: " + allTasks);
             adapter.notifyDataSetChanged();
 
         }
@@ -124,41 +142,21 @@ public class MainActivity extends AppCompatActivity {
 
 
             try {
-                // Prase the entire JSON string
+                // Parse the entire JSON string
                 JSONObject root = new JSONObject(contentAsString);
                 // get the array of tasks from JSON
                 JSONObject user = root.getJSONObject("user");
 //                System.out.println(user);
                 JSONArray tasks = user.getJSONArray("tasks");
 //                System.out.println(tasks);
-//                JSONArray tasks = new JSONArray(contentAsString);
 
-                HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
                 for(int i=0;i<tasks.length();i++) {
                     // parse the JSON object into fields and values
-                  JSONObject jsonTasks = tasks.getJSONObject(i);
-                   String task_id = jsonTasks.getString("task_id");
-                   String name = jsonTasks.getString("name");
-//                    int y_lat = jsonTasks.getInt("lat");
-//                    int x_long = jsonTasks.getInt("long");
-//                    int radius = jsonTasks.getInt("radius");
-//                    Boolean task_done = jsonTasks.getBoolean("done");
-//                    Boolean enter = jsonTasks.getBoolean("enter");
+                    JSONObject jsonTasks = tasks.getJSONObject(i);
+                    String name = jsonTasks.getString("name");
                     allTasks.add(name);
                     int position = allTasks.indexOf(name);
-
                     mapper.put(position, jsonTasks);
-                    System.out.println(mapper);
-                    //System.out.println(name);
-                    //System.out.println(taskid);
-                    //allTaskIDS.add(task_id);
-
-
-                    //System.out.println();
-                    //System.out.println("All good");
-
-
-
                 }
 
 
