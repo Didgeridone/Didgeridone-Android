@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
                     intent.putExtra("Reminder_Task_Id", jsonObj.get("task_id").toString());
                     intent.putExtra("Reminder_Name", jsonObj.get("name").toString());
-                    intent.putExtra("Reminder_Latitude", jsonObj.get("lat").toString());
-                    intent.putExtra("Reminder_Longitude", jsonObj.get("long").toString());
-                    intent.putExtra("Reminder_Radius", jsonObj.get("radius").toString());
+                    intent.putExtra("Reminder_Latitude", Double.parseDouble(jsonObj.get("lat").toString()));
+                    intent.putExtra("Reminder_Longitude", Double.parseDouble(jsonObj.get("long").toString()));
+                    intent.putExtra("Reminder_Radius", Double.parseDouble(jsonObj.get("radius").toString()));
                     startActivity(intent);
 
                 } catch (Exception e) {
