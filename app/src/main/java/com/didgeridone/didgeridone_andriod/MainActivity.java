@@ -32,6 +32,7 @@ import com.google.android.gms.location.sample.geofencing.Constants;
 import com.google.android.gms.location.sample.geofencing.GeofenceErrorMessages;
 import com.google.android.gms.location.sample.geofencing.GeofenceTransitionsIntentService;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -230,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleApiClient.disconnect();
     }
 
-
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -244,20 +244,15 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-
         protected void onPostExecute(String result) {
             adapter.notifyDataSetChanged();
 
         }
     }
 
-
-
     private String downloadContent(String myurl) throws IOException {
         InputStream is = null;
         int length = 50000;
-
-
 
         try {
             URL url = new URL(myurl);
@@ -268,20 +263,15 @@ public class MainActivity extends AppCompatActivity implements
             conn.setDoInput(true);
             conn.connect();
             int response = conn.getResponseCode();
-            Log.d(TAG, "The response is: " + response);
+            Log.d(TAG, "HTTP Response: " + response);
             is = conn.getInputStream();
-            String contentAsString = convertInputStreamToString(is, length);
-
-
+            String contentAsString = convertStreamToString(is);
 
             try {
                 // Parse the entire JSON string
                 JSONObject root = new JSONObject(contentAsString);
-                // get the array of tasks from JSON
                 JSONObject user = root.getJSONObject("user");
-//                System.out.println(user);
                 JSONArray tasks = user.getJSONArray("tasks");
-//                System.out.println(tasks);
 
                 for(int i=0;i<tasks.length();i++) {
                     // parse the JSON object into fields and values
@@ -291,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements
                     int position = allTasks.indexOf(name);
                     mapper.put(position, jsonTasks);
                 }
-
 
             } catch (Exception e) {
                 Log.d("Didgeridoo","Exception",e);
@@ -305,12 +294,25 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public String convertInputStreamToString(InputStream stream, int length) throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[length];
-        reader.read(buffer);
-        return new String(buffer);
+    private String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 
     /**
