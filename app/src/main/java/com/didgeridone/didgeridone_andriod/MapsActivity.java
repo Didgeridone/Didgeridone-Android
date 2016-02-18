@@ -158,10 +158,6 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
             Button delete_button = (Button) findViewById(R.id.button_delete);
             delete_button.setEnabled(false);
         }
-
-        // Start up our services here for now
-        System.out.println("******************************* Starting Geofence Services");
-        ((Geofence_Data) this.getApplication()).Initiate_Geofence_Services();
     }
 
     private class DraggableCircle {

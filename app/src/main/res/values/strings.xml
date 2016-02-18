@@ -22,4 +22,16 @@
     <string name="entering_geofence">Entering the GeoFence zone</string>
     <string name="exiting_geofence">Exiting the GeoFence zone</string>
     <string name="google_app_id">AIzaSyB0yxv9OZbMRYP7DTh5ao-qafTwApfNBOo</string>
+    <string name="geofences_added">GeoFence Added</string>
+    <string name="geofences_removed">GeoFence Removed</string>
+    <string name="not_connected">GeoFence Not Connected</string>
+    <string name="geofence_not_available">GeoFence Not Available</string>
+    <string name="geofence_too_many_geofences">Too Many GeoFences</string>
+    <string name="geofence_too_many_pending_intents">Too Many Pending Intents</string>
+    <string name="unknown_geofence_error">Unknown GeoFence Error</string>
+    <string name="geofence_transition_invalid_type">Invalid GeoFence Transition Type</string>
+    <string name="geofence_transition_entered">GeoFence Location Entered</string>
+    <string name="geofence_transition_exited">GeoFence Location Exited</string>
+    <string name="unknown_geofence_transition">GeoFence Location Transition</string>
+    <string name="geofence_transition_notification_text">Click notification to return to app</string>
 </resources>
