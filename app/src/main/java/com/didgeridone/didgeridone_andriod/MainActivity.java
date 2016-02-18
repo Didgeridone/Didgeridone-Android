@@ -3,6 +3,7 @@ package com.didgeridone.didgeridone_andriod;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
@@ -52,10 +54,8 @@ public class MainActivity extends AppCompatActivity implements
         ConnectionCallbacks, OnConnectionFailedListener, ResultCallback<Status> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
     ArrayList<String> allTasks = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
-
     HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
 
     /**
@@ -117,10 +117,6 @@ public class MainActivity extends AppCompatActivity implements
 
                 try {
                     JSONObject jsonObj = new JSONObject(obj);
-                    System.out.println(jsonObj);
-
-
-                    // To call this activity do this...
                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                     intent.putExtra("Reminder_User_Id", userID);
                     intent.putExtra("Reminder_Task_Id", jsonObj.get("task_id").toString());
@@ -133,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements
                 } catch (Exception e) {
                     Log.d("Didgeridoo", "Exception", e);
                 }
-
             }
         });
 
@@ -175,6 +170,34 @@ public class MainActivity extends AppCompatActivity implements
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
+
+        geofencesAddedButtonState(mGeofencesAdded);
+    }
+
+    public void geofencesEnableDisableButton(View view) {
+        toggleGeofencesEnableDisable();
+    }
+
+    public void toggleGeofencesEnableDisable() {
+        if (mGeofencesAdded == true) {
+            removeGeofences();
+        } else {
+            addGeofences();
+        }
+
+        // Now update our service status
+        mGeofencesAdded = mSharedPreferences.getBoolean(Constants.GEOFENCES_ADDED_KEY, false);
+        geofencesAddedButtonState(mGeofencesAdded);
+    }
+
+    private void geofencesAddedButtonState(boolean state) {
+        Button geofence_button = (Button) findViewById(R.id.button_geofence);
+
+        if (state == true) {
+            geofence_button.setBackgroundColor(Color.parseColor("#ffcc0000"));
+        } else {
+            geofence_button.setBackgroundColor(Color.parseColor("#ff669900"));
+        }
     }
 
     /**
@@ -205,6 +228,28 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Removes geofences, which stops further notifications when the device enters or exits
+     * previously registered geofences.
+     */
+    public void removeGeofences() {
+        if (!mGoogleApiClient.isConnected()) {
+            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            // Remove geofences.
+            LocationServices.GeofencingApi.removeGeofences(
+                    mGoogleApiClient,
+                    // This is the same pending intent that was used in addGeofences().
+                    getGeofencePendingIntent()
+            ).setResultCallback(this); // Result processed in onResult().
+        } catch (SecurityException securityException) {
+            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+            logSecurityException(securityException);
+        }
+    }
+
     private void logSecurityException(SecurityException securityException) {
         Log.e(TAG, "Invalid location permission. " +
                 "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
@@ -225,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+//        geofencesAddedButtonState(mGeofencesAdded);
+//        System.out.println("State Start: " + mGeofencesAdded);
     }
 
     @Override
@@ -248,13 +295,11 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String result) {
             adapter.notifyDataSetChanged();
-
         }
     }
 
     private String downloadContent(String myurl) throws IOException {
         InputStream is = null;
-        int length = 50000;
 
         try {
             URL url = new URL(myurl);
@@ -323,8 +368,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "Connected to GoogleApiClient");
-        // Start the geofences
-        addGeofences();
     }
 
     @Override
@@ -365,8 +408,6 @@ public class MainActivity extends AppCompatActivity implements
      *               removeGeofences() get called.
      */
     public void onResult(Status status) {
-
-        System.out.println("************* MainActivity: onResult **************");
 
         if (status.isSuccess()) {
             // Update state and save in shared preferences.
