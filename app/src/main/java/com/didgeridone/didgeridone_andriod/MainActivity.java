@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements
         ConnectionCallbacks, OnConnectionFailedListener, ResultCallback<Status> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    ArrayList<String> allTasks = new ArrayList<String>();
+    private String User_ID = "";
+    private ArrayList<String> allTasks = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
     HashMap<Integer, Object> mapper = new HashMap<Integer, Object>();
 
@@ -91,20 +92,20 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         SharedPreferences prefs = getSharedPreferences("userInfo", MODE_PRIVATE);
-        final String userID = prefs.getString("userID", "default user id");
-        System.out.println("USER ID HERE " + userID);
+        User_ID = prefs.getString("userID", "default user id");
+        System.out.println("USER ID HERE " + User_ID);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                intent.putExtra("Reminder_User_Id", userID);
+                intent.putExtra("Reminder_User_Id", User_ID);
                 startActivity(intent);
             }
         });
 
-        new DownloadTask().execute("https://didgeridone.herokuapp.com/task/" + userID);
+        new DownloadTask().execute("https://didgeridone.herokuapp.com/task/" + User_ID);
 
         final ListView myList;
         myList = (ListView) findViewById(R.id.listView);
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements
                 try {
                     JSONObject jsonObj = new JSONObject(obj);
                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                    intent.putExtra("Reminder_User_Id", userID);
+                    intent.putExtra("Reminder_User_Id", User_ID);
                     intent.putExtra("Reminder_Task_Id", jsonObj.get("task_id").toString());
                     intent.putExtra("Reminder_Name", jsonObj.get("name").toString());
                     intent.putExtra("Reminder_Latitude", Double.parseDouble(jsonObj.get("lat").toString()));
@@ -150,27 +151,50 @@ public class MainActivity extends AppCompatActivity implements
         // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
         mGeofencesAdded = mSharedPreferences.getBoolean(Constants.GEOFENCES_ADDED_KEY, false);
 
-        // Get the geofences used. Geofence data is hard coded in this sample.
-        String testTaskID = "56c4eae7955ff711007353e8";
-        mGeofenceList.add(new Geofence.Builder()
-                // Set the request ID of the geofence. This is a string to identify this geofence.
-                .setRequestId("Remember to buy milk!")
 
-                .setCircularRegion(
-                        39.757731,
-                        -105.00706799999999,
-                        70f
-                )
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setLoiteringDelay(60000)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT |
-                        Geofence.GEOFENCE_TRANSITION_DWELL)
-                .build());
+//        // Populate our geofence array with all our tasks
+//System.out.println("*********************** All Tasks Size: " + allTasks.size());
+//        for (int allTaskIndex = 0; allTaskIndex < allTasks.size(); allTaskIndex++) {
+//            String currentTask = allTasks.get(allTaskIndex);
+//System.out.println("********************************* Current Task: " + currentTask);
+//            Geofence.Builder newBuilder = new Geofence.Builder();
+//            newBuilder.setRequestId("Remember to buy milk!");
+//            newBuilder.setCircularRegion(
+//                    39.757448,
+//                    -105.00706799999999,
+//                    70f
+//            );
+//            newBuilder.setExpirationDuration(Geofence.NEVER_EXPIRE);
+//            newBuilder.setLoiteringDelay(60000);
+//            newBuilder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+//                    Geofence.GEOFENCE_TRANSITION_EXIT |
+//                    Geofence.GEOFENCE_TRANSITION_DWELL);
+//
+//            mGeofenceList.add(newBuilder.build());
+//        }
+
+        // Get the geofences used. Geofence data is hard coded in this sample.
+//        String testTaskID = "56c4eae7955ff711007353e8";
+//        mGeofenceList.add(new Geofence.Builder()
+                // Set the request ID of the geofence. This is a string to identify this geofence.
+//                .setRequestId("Remember to buy milk!")
+//
+//                .setCircularRegion(
+//                        39.757448,
+//                        -105.00706799999999,
+//                        70f
+//                )
+//                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+//                .setLoiteringDelay(60000)
+//                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+//                        Geofence.GEOFENCE_TRANSITION_EXIT |
+//                        Geofence.GEOFENCE_TRANSITION_DWELL)
+//                .build());
 
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
 
+        // This isn't working right now
         geofencesAddedButtonState(mGeofencesAdded);
     }
 
@@ -205,13 +229,15 @@ public class MainActivity extends AppCompatActivity implements
      * specified geofences. Handles the success or failure results returned by addGeofences().
      */
     public void addGeofences() {
+
+        System.out.println("****************************** Here??");
+
         if (!mGoogleApiClient.isConnected()) {
             Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
         }
 
         try {
-
             LocationServices.GeofencingApi.addGeofences(
                     mGoogleApiClient,
                     // The GeofenceRequest object.
@@ -331,6 +357,34 @@ public class MainActivity extends AppCompatActivity implements
 
             } catch (Exception e) {
                 Log.d("Didgeridoo","Exception",e);
+            }
+
+            // Populate our geofence array with all our tasks
+            for (int allTaskIndex = 0; allTaskIndex < allTasks.size(); allTaskIndex++) {
+                JSONObject mapperData;
+
+                try {
+                    mapperData = new JSONObject(mapper.get(allTaskIndex).toString());
+
+                    String taskName = mapperData.getString("name");
+                    double taskLat = Double.parseDouble(mapperData.getString("lat"));
+                    double taskLng = Double.parseDouble(mapperData.getString("long"));
+                    float taskRadius = Float.parseFloat(mapperData.getString("radius"));
+
+                    Geofence.Builder newBuilder = new Geofence.Builder();
+                    newBuilder.setRequestId(taskName);
+                    newBuilder.setCircularRegion(taskLat, taskLng, taskRadius);
+                    newBuilder.setExpirationDuration(Geofence.NEVER_EXPIRE);
+                    newBuilder.setLoiteringDelay(60000);
+                    newBuilder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT |
+                            Geofence.GEOFENCE_TRANSITION_DWELL);
+
+                    mGeofenceList.add(newBuilder.build());
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
 
             return contentAsString;
