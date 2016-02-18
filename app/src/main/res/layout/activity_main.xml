@@ -17,7 +17,20 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GeoFence"
+                android:id="@+id/button_geofence"
+                android:onClick="geofencesEnableDisableButton"
+                android:gravity="center_vertical|center_horizontal"
+                android:background="@android:color/holo_red_dark" />
+
+        </android.support.v7.widget.Toolbar>
+
+
 
     </android.support.design.widget.AppBarLayout>
 
