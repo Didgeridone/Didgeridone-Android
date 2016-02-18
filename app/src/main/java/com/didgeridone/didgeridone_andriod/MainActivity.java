@@ -83,14 +83,16 @@ public class MainActivity extends AppCompatActivity implements
      */
     private SharedPreferences mSharedPreferences;
 
-    String userID = "56c3ad2db2273e8c7c9d3612";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences prefs = getSharedPreferences("userInfo", MODE_PRIVATE);
+        final String userID = prefs.getString("userID", "default user id");
+        System.out.println("USER ID HERE " + userID);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

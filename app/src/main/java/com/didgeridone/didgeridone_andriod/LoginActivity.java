@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +32,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -293,6 +302,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -313,18 +323,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             try {
                 // Simulate network access.
-                Thread.sleep(500);
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-//                intent.putExtra("Reminder_User_Id", "56c3ad2db2273e8c7c9d3612");
-//                intent.putExtra("Reminder_Task_Id", "56c4ad756c11bc110089a24c");
-//                intent.putExtra("Reminder_Name", "Test Reminder Name");
-//                intent.putExtra("Reminder_Latitude", (double)39.75778308);
-//                intent.putExtra("Reminder_Longitude", (double)-105.00715055);
-//                intent.putExtra("Reminder_Radius", (double)12.0);
-//                startActivity(intent);
-            } catch (InterruptedException e) {
-                return false;
+                JSONObject obj = new JSONObject();
+                obj.put("email", mEmail);
+                obj.put("password", mPassword);
+
+                URL url = new URL("https://didgeridone.herokuapp.com/auth/login");
+                HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+                httpCon.setDoOutput(true);
+                httpCon.setRequestMethod("POST");
+                httpCon.setConnectTimeout(15000);
+                httpCon.setRequestProperty("Content-type", "application/json");
+                OutputStreamWriter out = new OutputStreamWriter( httpCon.getOutputStream() );
+                out.write(obj.toString());
+                out.close();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line+"\n");
+                }
+                br.close();
+                JSONObject root = new JSONObject(sb.toString());
+                JSONObject user = root.getJSONObject("user");
+                String token = root.getString("token");
+                String userID = user.getString("_id");
+
+                if (token.length() < 1 && userID.length() < 1) {
+                    throw new Exception("User ID or token can back null.");
+                } else {
+                    //This is how you retrieve data from SharedPreferences
+//                SharedPreferences prefs = getSharedPreferences("userInfo", MODE_PRIVATE);
+//                String tokenOut = prefs.getString("token", "default token");
+//                String userIDOut = prefs.getString("userID", "default user id");
+
+//                System.out.println("********** RESPONSE FROM LOGIN:  " + sb.toString());
+
+                    SharedPreferences.Editor editor = getSharedPreferences("userInfo", MODE_PRIVATE).edit();
+                    editor.putString("token", token);
+                    editor.putString("userID", userID);
+                    editor.commit();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+
+                httpCon.disconnect();
+
+            } catch (Exception e) {
+                Log.d("Didgeridoo", "Exception", e);
             }
 
             for (String credential : DUMMY_CREDENTIALS) {
