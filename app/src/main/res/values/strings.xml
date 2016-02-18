@@ -22,8 +22,8 @@
     <string name="entering_geofence">Entering the GeoFence zone</string>
     <string name="exiting_geofence">Exiting the GeoFence zone</string>
     <string name="google_app_id">AIzaSyB0yxv9OZbMRYP7DTh5ao-qafTwApfNBOo</string>
-    <string name="geofences_added">GeoFence Added</string>
-    <string name="geofences_removed">GeoFence Removed</string>
+    <string name="geofences_added">GeoFence Enabled</string>
+    <string name="geofences_removed">GeoFence Disabled</string>
     <string name="not_connected">GeoFence Not Connected</string>
     <string name="geofence_not_available">GeoFence Not Available</string>
     <string name="geofence_too_many_geofences">Too Many GeoFences</string>

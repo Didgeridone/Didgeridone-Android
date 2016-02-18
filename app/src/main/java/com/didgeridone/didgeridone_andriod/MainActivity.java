@@ -151,46 +151,6 @@ public class MainActivity extends AppCompatActivity implements
         // Get the value of mGeofencesAdded from SharedPreferences. Set to false as a default.
         mGeofencesAdded = mSharedPreferences.getBoolean(Constants.GEOFENCES_ADDED_KEY, false);
 
-
-//        // Populate our geofence array with all our tasks
-//System.out.println("*********************** All Tasks Size: " + allTasks.size());
-//        for (int allTaskIndex = 0; allTaskIndex < allTasks.size(); allTaskIndex++) {
-//            String currentTask = allTasks.get(allTaskIndex);
-//System.out.println("********************************* Current Task: " + currentTask);
-//            Geofence.Builder newBuilder = new Geofence.Builder();
-//            newBuilder.setRequestId("Remember to buy milk!");
-//            newBuilder.setCircularRegion(
-//                    39.757448,
-//                    -105.00706799999999,
-//                    70f
-//            );
-//            newBuilder.setExpirationDuration(Geofence.NEVER_EXPIRE);
-//            newBuilder.setLoiteringDelay(60000);
-//            newBuilder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-//                    Geofence.GEOFENCE_TRANSITION_EXIT |
-//                    Geofence.GEOFENCE_TRANSITION_DWELL);
-//
-//            mGeofenceList.add(newBuilder.build());
-//        }
-
-        // Get the geofences used. Geofence data is hard coded in this sample.
-//        String testTaskID = "56c4eae7955ff711007353e8";
-//        mGeofenceList.add(new Geofence.Builder()
-                // Set the request ID of the geofence. This is a string to identify this geofence.
-//                .setRequestId("Remember to buy milk!")
-//
-//                .setCircularRegion(
-//                        39.757448,
-//                        -105.00706799999999,
-//                        70f
-//                )
-//                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-//                .setLoiteringDelay(60000)
-//                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-//                        Geofence.GEOFENCE_TRANSITION_EXIT |
-//                        Geofence.GEOFENCE_TRANSITION_DWELL)
-//                .build());
-
         // Kick off the request to build GoogleApiClient.
         buildGoogleApiClient();
 
@@ -208,19 +168,17 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             addGeofences();
         }
-
-        // Now update our service status
-        mGeofencesAdded = mSharedPreferences.getBoolean(Constants.GEOFENCES_ADDED_KEY, false);
-        geofencesAddedButtonState(mGeofencesAdded);
     }
 
     private void geofencesAddedButtonState(boolean state) {
         Button geofence_button = (Button) findViewById(R.id.button_geofence);
 
         if (state == true) {
-            geofence_button.setBackgroundColor(Color.parseColor("#ffcc0000"));
-        } else {
+            // Turn the button green
             geofence_button.setBackgroundColor(Color.parseColor("#ff669900"));
+        } else {
+            // Turn the button red
+            geofence_button.setBackgroundColor(Color.parseColor("#ffcc0000"));
         }
     }
 
@@ -229,8 +187,6 @@ public class MainActivity extends AppCompatActivity implements
      * specified geofences. Handles the success or failure results returned by addGeofences().
      */
     public void addGeofences() {
-
-        System.out.println("****************************** Here??");
 
         if (!mGoogleApiClient.isConnected()) {
             Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
@@ -248,9 +204,12 @@ public class MainActivity extends AppCompatActivity implements
                     getGeofencePendingIntent()
             ).setResultCallback(this); // Result processed in onResult().
 
+            geofencesAddedButtonState(true);
+
         } catch (SecurityException securityException) {
             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
             logSecurityException(securityException);
+            geofencesAddedButtonState(false);
         }
     }
 
@@ -270,9 +229,12 @@ public class MainActivity extends AppCompatActivity implements
                     // This is the same pending intent that was used in addGeofences().
                     getGeofencePendingIntent()
             ).setResultCallback(this); // Result processed in onResult().
+            geofencesAddedButtonState(false);
+
         } catch (SecurityException securityException) {
             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
             logSecurityException(securityException);
+            geofencesAddedButtonState(true);
         }
     }
 
