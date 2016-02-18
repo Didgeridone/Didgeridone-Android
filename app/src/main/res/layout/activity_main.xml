@@ -30,13 +30,9 @@
 
         </android.support.v7.widget.Toolbar>
 
-
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -50,14 +46,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/btnAddItem" />
-
-
-
-
 
 </android.support.design.widget.CoordinatorLayout>
