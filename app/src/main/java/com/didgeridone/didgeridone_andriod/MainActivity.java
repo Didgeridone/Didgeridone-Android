@@ -260,8 +260,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-//        geofencesAddedButtonState(mGeofencesAdded);
-//        System.out.println("State Start: " + mGeofencesAdded);
     }
 
     @Override
@@ -339,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements
                     newBuilder.setRequestId(taskName);
                     newBuilder.setCircularRegion(taskLat, taskLng, taskRadius);
                     newBuilder.setExpirationDuration(Geofence.NEVER_EXPIRE);
-                    newBuilder.setLoiteringDelay(60000);
+                    newBuilder.setLoiteringDelay(30000);
                     newBuilder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                             Geofence.GEOFENCE_TRANSITION_EXIT |
                             Geofence.GEOFENCE_TRANSITION_DWELL);
@@ -433,10 +431,6 @@ public class MainActivity extends AppCompatActivity implements
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putBoolean(Constants.GEOFENCES_ADDED_KEY, mGeofencesAdded);
             editor.apply();
-
-            // Update the UI. Adding geofences enables the Remove Geofences button, and removing
-            // geofences enables the Add Geofences button.
-//            setButtonsEnabledState();
 
             Toast.makeText(
                     this,

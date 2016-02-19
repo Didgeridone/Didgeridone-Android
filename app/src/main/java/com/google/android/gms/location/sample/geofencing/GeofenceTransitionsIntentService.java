@@ -153,14 +153,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Define the notification settings.
         builder.setSmallIcon(R.drawable.ic_explorer)
-                // In a real app, you may want to use a library like Volley
-                // to decode the Bitmap.
-//                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-//                        R.drawable.ic_explorer))
-                .setColor(Color.RED)
-                .setContentTitle(notificationDetails)
-                .setContentText(getString(R.string.geofence_transition_notification_text))
-                .setContentIntent(notificationPendingIntent);
+            .setColor(Color.RED)
+            .setContentTitle(notificationDetails)
+            .setContentText(getString(R.string.geofence_transition_notification_text))
+            .setContentIntent(notificationPendingIntent)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationDetails));
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);
