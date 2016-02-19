@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Didgeridone-Andriod</string>
+    <string name="app_name">Didgeridone</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -13,7 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Didgeridone</string>
     <string name="Maps_Label_Reminder_Name">Name:</string>
     <string name="title_activity_maps">New Reminder</string>
 
