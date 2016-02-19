@@ -158,9 +158,11 @@ public class MainActivity extends AppCompatActivity implements
         geofencesAddedButtonState(mGeofencesAdded);
     }
 
+
     public void geofencesEnableDisableButton(View view) {
         toggleGeofencesEnableDisable();
     }
+
 
     public void toggleGeofencesEnableDisable() {
         if (mGeofencesAdded == true) {
