@@ -30,8 +30,8 @@
     <string name="geofence_too_many_pending_intents">Too Many Pending Intents</string>
     <string name="unknown_geofence_error">Unknown GeoFence Error</string>
     <string name="geofence_transition_invalid_type">Invalid GeoFence Transition Type</string>
-    <string name="geofence_transition_entered">GeoFence Location Entered</string>
-    <string name="geofence_transition_exited">GeoFence Location Exited</string>
-    <string name="unknown_geofence_transition">GeoFence Location Transition</string>
+    <string name="geofence_transition_entered">GeoFence Entered</string>
+    <string name="geofence_transition_exited">GeoFence Exited</string>
+    <string name="unknown_geofence_transition">GeoFence Transition</string>
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
 </resources>
