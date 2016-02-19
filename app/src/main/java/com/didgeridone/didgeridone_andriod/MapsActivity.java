@@ -1,6 +1,8 @@
 package com.didgeridone.didgeridone_andriod;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -252,43 +254,65 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
     }
 
     public void buttonDelete(View v) {
-        String[] Request_Array = {"DELETE", ""};
-        new Reminder_API().execute(Request_Array);
-        //new Delete_Reminder().execute();
-        startActivity(new Intent(MapsActivity.this, MainActivity.class));
+
+        new AlertDialog.Builder(this)
+                .setTitle("Delete entry")
+                .setMessage("Are you sure you want to delete this task?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String[] Request_Array = {"DELETE", ""};
+                        new Reminder_API().execute(Request_Array);
+                        startActivity(new Intent(MapsActivity.this, MainActivity.class));
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     public void buttonSave(View v) {
-        //Location_Circle
         EditText editText = (EditText) findViewById(R.id.editText_Reminder_Name);
 
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("name", editText.getText().toString());
-            obj.put("lat", String.valueOf(Location_Circle.centerMarker.getPosition().latitude));
-            obj.put("long", String.valueOf(Location_Circle.centerMarker.getPosition().longitude));
-            obj.put("radius", Location_Circle.radius);
-            obj.put("done", false);
-            obj.put("enter", true);
-            obj.put("task_id", Task_ID);
+        // Reset errors and check the field
+        editText.setError(null);
 
-            // If our Task ID is empty we will add a new reminder
-            if (Task_ID == "") {
-                String[] Request_Array = {"POST", obj.toString()};
-                new Reminder_API().execute(Request_Array);
-                //new Add_Reminder().execute(obj);
-            } else {
-                String[] Request_Array = {"PUT", obj.toString()};
-                new Reminder_API().execute(Request_Array);
-                //new Update_Reminder().execute(obj);
+        if ( !isValidTaskName( editText.getText().toString() ) ) {
+            editText.setError("Task name must be at least 4 characters.");
+            editText.requestFocus();
+
+        } else {
+
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("name", editText.getText().toString());
+                obj.put("lat", String.valueOf(Location_Circle.centerMarker.getPosition().latitude));
+                obj.put("long", String.valueOf(Location_Circle.centerMarker.getPosition().longitude));
+                obj.put("radius", Location_Circle.radius);
+                obj.put("done", false);
+                obj.put("enter", true);
+                obj.put("task_id", Task_ID);
+
+                // If our Task ID is empty we will add a new reminder
+                if (Task_ID == "") {
+                    String[] Request_Array = {"POST", obj.toString()};
+                    new Reminder_API().execute(Request_Array);
+                    //new Add_Reminder().execute(obj);
+                } else {
+                    String[] Request_Array = {"PUT", obj.toString()};
+                    new Reminder_API().execute(Request_Array);
+                    //new Update_Reminder().execute(obj);
+                }
+
+                startActivity(new Intent(MapsActivity.this, MainActivity.class));
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            startActivity(new Intent(MapsActivity.this, MainActivity.class));
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
 
     class Reminder_API extends AsyncTask<String, Void, Void> {
@@ -347,5 +371,9 @@ public class MapsActivity extends FragmentActivity implements OnMarkerDragListen
             super.onPostExecute(result);
             // Handle/Update UI Part
         }
+    }
+
+    public boolean isValidTaskName(String taskName) {
+        return taskName.length() > 3;
     }
 }
