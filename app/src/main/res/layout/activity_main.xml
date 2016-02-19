@@ -23,12 +23,14 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GeoFence"
+                android:text="GeoFences Online"
                 android:id="@+id/button_geofence"
                 android:onClick="geofencesEnableDisableButton"
                 android:layout_gravity="right"
                 android:gravity="center_vertical|center_horizontal"
-                android:background="@android:color/holo_green_dark" />
+                android:background="@android:color/holo_green_dark"
+                android:maxWidth="50dp"
+                android:textSize="13dp" />
 
         </android.support.v7.widget.Toolbar>
 

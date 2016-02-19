@@ -176,9 +176,11 @@ public class MainActivity extends AppCompatActivity implements
         if (state == true) {
             // Turn the button green
             geofence_button.setBackgroundColor(Color.parseColor("#ff669900"));
+            geofence_button.setText("Geofences Enabled");
         } else {
             // Turn the button red
             geofence_button.setBackgroundColor(Color.parseColor("#ffcc0000"));
+            geofence_button.setText("Geofences Disabled");
         }
     }
 
