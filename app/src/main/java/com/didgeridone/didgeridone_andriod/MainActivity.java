@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements
                     newBuilder.setRequestId(taskName);
                     newBuilder.setCircularRegion(taskLat, taskLng, taskRadius);
                     newBuilder.setExpirationDuration(Geofence.NEVER_EXPIRE);
-                    newBuilder.setLoiteringDelay(30000);
+                    newBuilder.setLoiteringDelay(10000);
                     newBuilder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                             Geofence.GEOFENCE_TRANSITION_EXIT |
                             Geofence.GEOFENCE_TRANSITION_DWELL);
